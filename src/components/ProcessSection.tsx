@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useScroll, useTransform } from "framer-motion"
+import { motion, useScroll, useTransform, useMotionValue, useMotionValueEvent } from "framer-motion"
 import { useRef } from "react"
 
 export function ProcessSection() {
@@ -80,10 +80,17 @@ export function ProcessSection() {
       { clamp: true }
     )
 
-    const finalOpacity = useTransform(
-      [visibility, bgOpacity],
-      ([v, bg]: [number, number]) => v * bg
-    )
+    const finalOpacity = useMotionValue(1)
+
+    useMotionValueEvent(visibility, "change", (latest) => {
+      const bgValue = bgOpacity.get()
+      finalOpacity.set(latest * bgValue)
+    })
+
+    useMotionValueEvent(bgOpacity, "change", (latest) => {
+      const visValue = visibility.get()
+      finalOpacity.set(visValue * latest)
+    })
 
     return {
       x,
