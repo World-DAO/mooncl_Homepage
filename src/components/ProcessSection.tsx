@@ -102,7 +102,6 @@ export function ProcessSection() {
   }
 
   return (
-    <div id="process">
       <section 
         ref={containerRef}
         id="process"
@@ -157,6 +156,5 @@ export function ProcessSection() {
           </div>
         </div>
       </section>
-    </div>
   )
 } 

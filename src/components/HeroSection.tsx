@@ -21,10 +21,12 @@ export function HeroSection() {
       <div className="absolute inset-0 z-0">
         <Image
           src="/hero-bg.png"
-          alt="背景图"
+          alt="background"
           fill
-          className="object-cover"
+          quality={100}
           priority
+          sizes="100vw"
+          className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-black/50" />
       </div>
