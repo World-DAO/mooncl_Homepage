@@ -16,6 +16,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Mooncl",
   description: "Web3 Socialfai Bar",
+  icons: {
+    icon: '/favicon.png'
+  }
 };
 
 export default function RootLayout({
@@ -26,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-       
+
       >
         {children}
       </body>
