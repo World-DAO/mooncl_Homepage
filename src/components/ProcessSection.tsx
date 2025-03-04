@@ -1,10 +1,28 @@
 'use client'
 
 import { motion, useScroll, useTransform, useMotionValue, useMotionValueEvent } from "framer-motion"
-import { useRef } from "react"
+import { useRef, useState, useEffect } from "react"
 
 export function ProcessSection() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [isMobile, setIsMobile] = useState(false)
+  
+  // 检测设备是否为移动设备
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 1358)
+    }
+    
+    // 初始检查
+    checkIfMobile()
+    
+    // 监听窗口大小变化
+    window.addEventListener('resize', checkIfMobile)
+    
+    // 清理监听器
+    return () => window.removeEventListener('resize', checkIfMobile)
+  }, [])
+  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end end"]
@@ -29,6 +47,7 @@ export function ProcessSection() {
     }
   ]
 
+  // 无论是否为移动端，都定义动画函数和所有hooks
   const getCardAnimation = (index: number) => {
     const cardStart = index * 0.2
     const cardEnd = Math.min(cardStart + 0.3, 0.9)
@@ -101,60 +120,101 @@ export function ProcessSection() {
     }
   }
 
+  // 为所有卡片预先计算动画属性，即使在移动端不使用
+  const cardAnimations = cards.map((_, index) => getCardAnimation(index))
+
+  // 在所有hooks调用之后，根据isMobile渲染不同的UI
   return (
-      <section 
-        ref={containerRef}
-        id="process"
-        className="relative h-[400vh] bg-black text-white"
-      >
-        <div className="sticky top-0 h-screen flex items-center justify-center">
-          <div className="w-full mx-auto px-20 grid grid-cols-[1fr_2fr] gap-8">
-            {/* 左侧标题 */}
-            <div className="pr-12 flex flex-col justify-center pl-20">
-              <h2 className="text-6xl md:text-8xl font-bold mb-10">
-                How It
-                <br />
-                Works
+    <>
+      {isMobile ? (
+        // 移动端版本的组件
+        <section 
+          id="process"
+          className="relative bg-black text-white py-16"
+        >
+          <div className="w-full mx-auto px-6">
+            {/* 标题部分 */}
+            <div className="mb-12 text-center">
+              <h2 className="text-4xl font-bold mb-4">
+                How It Works
               </h2>
-              <p className="text-gray-400 text-xl">
+              <p className="text-gray-400 text-lg">
                 Four steps to start your journey at Mooncl
               </p>
             </div>
 
-            {/* 右侧卡片容器 */}
-            <div className="relative h-[90vh] overflow-hidden flex items-center pl-40">
-              {cards.map((card, index) => {
-                const { x, scale, blur, zIndex, finalOpacity } = getCardAnimation(index)
-                
-                return (
-                  <motion.div
-                    key={index}
-                    style={{
-                      x,
-                      scale,
-                      filter: `blur(${blur}px)`,
-                      zIndex,
-                      backgroundColor: 'rgb(255, 255, 255)',
-                      opacity: finalOpacity,
-                      position: 'absolute',
-                      width: '100%',
-                      maxWidth: '32rem',
-                      height: '420px',
-                      left: '10%'
-                    }}
-                    className="p-12 rounded-2xl shadow-xl backdrop-blur-sm border border-gray-200"
-                  >
-                    <motion.div>
-                      <div className="text-[#8361A0] text-7xl mb-8">0{index + 1}</div>
-                      <h3 className="text-4xl font-bold mb-6 text-gray-900">{card.title}</h3>
-                      <p className="text-gray-600 text-xl leading-relaxed">{card.desc}</p>
-                    </motion.div>
-                  </motion.div>
-                )
-              })}
+            {/* 卡片部分 - 使用flex布局垂直排列 */}
+            <div className="flex flex-col gap-6">
+              {cards.map((card, index) => (
+                <div
+                  key={index}
+                  className="p-6 rounded-2xl shadow-xl backdrop-blur-sm border border-gray-200 bg-white"
+                >
+                  <div className="text-[#8361A0] text-5xl mb-4">0{index + 1}</div>
+                  <h3 className="text-2xl font-bold mb-3 text-gray-900">{card.title}</h3>
+                  <p className="text-gray-600 text-base leading-relaxed">{card.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : (
+        // 桌面版本的组件（原有的滚动效果）
+        <section 
+          ref={containerRef}
+          id="process"
+          className="relative h-[400vh] bg-black text-white"
+        >
+          <div className="sticky top-0 h-screen flex items-center justify-center">
+            <div className="w-full mx-auto px-20 grid grid-cols-[1fr_2fr] gap-8">
+              {/* 左侧标题 */}
+              <div className="pr-12 flex flex-col justify-center pl-20">
+                <h2 className="text-6xl md:text-8xl font-bold mb-10">
+                  How It
+                  <br />
+                  Works
+                </h2>
+                <p className="text-gray-400 text-xl">
+                  Four steps to start your journey at Mooncl
+                </p>
+              </div>
+
+              {/* 右侧卡片容器 */}
+              <div className="relative h-[90vh] overflow-hidden flex items-center pl-40">
+                {cards.map((card, index) => {
+                  const { x, scale, blur, zIndex, finalOpacity } = cardAnimations[index]
+                  
+                  return (
+                    <motion.div
+                      key={index}
+                      style={{
+                        x,
+                        scale,
+                        filter: `blur(${blur}px)`,
+                        zIndex,
+                        backgroundColor: 'rgb(255, 255, 255)',
+                        opacity: finalOpacity,
+                        position: 'absolute',
+                        width: '100%',
+                        maxWidth: '32rem',
+                        height: '420px',
+                        left: '10%'
+                      }}
+                      className="p-12 rounded-2xl shadow-xl backdrop-blur-sm border border-gray-200 "
+                    >
+                      <motion.div>
+                        <div className="text-[#8361A0] text-7xl mb-8">0{index + 1}</div>
+                        <h3 className="text-4xl font-bold mb-6 text-gray-900">{card.title}</h3>
+                        <p className="text-gray-600 text-xl leading-relaxed">{card.desc}</p>
+                      </motion.div>
+                    </motion.div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+    </>
   )
 } 
