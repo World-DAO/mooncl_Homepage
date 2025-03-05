@@ -182,9 +182,9 @@ export function HeroSection() {
       {/* 社交媒体图标容器 */}
       <div className="absolute bottom-14 left-14 flex gap-6">
         {[
-          { icon: "/telegram.png", url: "#", alt: "Telegram" },
-          { icon: "/twitter.png", url: "#", alt: "Twitter" },
-          { icon: "/youtube.png", url: "#", alt: "YouTube" }
+          { icon: "/telegram.png", url: "https://t.me/+wuvMJ9vienk2Zjdl", alt: "Telegram" },
+          { icon: "/twitter.png", url: "https://x.com/mooncLisa", alt: "Twitter" },
+          { icon: "/youtube.png", url: "https://www.youtube.com/@MooncLisa", alt: "YouTube" }
         ].map((social, index) => (
           <motion.a
             key={social.alt}

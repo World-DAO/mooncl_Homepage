@@ -9,9 +9,9 @@ export function Footer() {
       <div className="container mx-auto px-6 text-center">
         <div className="flex justify-center gap-6 mb-8">
           {[
-            { icon: "/telegram.png", url: "#", alt: "Telegram" },
-            { icon: "/twitter.png", url: "#", alt: "Twitter" },
-            { icon: "/youtube.png", url: "#", alt: "YouTube" }
+            { icon: "/telegram.png", url: "https://t.me/+wuvMJ9vienk2Zjdl", alt: "Telegram" },
+            { icon: "/twitter.png", url: "https://x.com/mooncLisa", alt: "Twitter" },
+            { icon: "/youtube.png", url: "https://www.youtube.com/@MooncLisa", alt: "YouTube" }
           ].map((social, index) => (
             <motion.a
               key={social.alt}
